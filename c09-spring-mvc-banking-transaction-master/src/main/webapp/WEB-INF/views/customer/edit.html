@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit</title>
+    <link rel="stylesheet" href="/resources/bootstrap-5.0.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/resources/css/styles.css">
+    <link rel="stylesheet" href="/resources/fontawesome-free-5.15.4-web/css/fontawesome.min.css">
+    <link rel="stylesheet" href="/resources/fontawesome-free-5.15.4-web/css/solid.min.css">
+    <script src="/resources/bootstrap-5.0.2/js/bootstrap.bundle.min.js"></script>
+</head>
+<body>
+
+<div class="container">
+    <div class="table-title">
+        <div class="row">
+            <div class="col-sm-5">
+                <h1>Edit</h1>
+            </div>
+            <div class="col-sm-7">
+                <a href="/customers" class="btn btn-outline-light">
+                    <i class="fas fa-list" aria-hidden="true"></i>
+                    <span>Customer list</span>
+                </a>
+            </div>
+        </div>
+    </div>
+    <form id="frmDeposit" th:object="${customer}" method="post">
+        <div class="row">
+            <div class="mb-3 col-md-6">
+                <label for="customerId" class="form-label fw-bold">Customer Id</label>
+                <input type="text" class="form-control" id="customerId" name="customerId" th:field="*{id}" readonly>
+            </div>
+            <div class="mb-3 col-md-6 ">
+                <label for="fullName" class="form-label fw-bold">Full Name</label>
+                <input type="text" class="form-control" id="fullName" name="fullName" th:field="*{fullName}" readonly>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="mb-3 col-md-6 ">
+                <label for="balance" class="form-label fw-bold">Current balance</label>
+                <input type="tel" class="form-control" id="balance" name="balance" th:field="*{balance}" readonly>
+            </div>
+            <div class="mb-3 col-md-6">
+                <label for="transactionAmount" class="form-label fw-bold">transaction Amount ($)</label>
+                <input type="text" class="form-control" id="transactionAmount" name="transactionAmount">
+            </div>
+        </div>
+        <button type="submit" id="btnCreate" class="btn btn-outline-primary">
+            Create Customer
+        </button>
+    </form>
+</div>
+
+</body>
+</html>
