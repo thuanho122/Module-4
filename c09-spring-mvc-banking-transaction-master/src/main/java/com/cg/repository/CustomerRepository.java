@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 
 @Repository
@@ -20,4 +21,8 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
     @Modifying
     @Query("UPDATE  Customer c SET c.balance = c.balance - :transactionAmount WHERE c.id = :id")
     void reduceBalance(@Param("transactionAmount") BigDecimal transactionAmount, @Param("id") Long id);
+
+
+
+    List<Customer> findAllByIdNot(Long id);
 }

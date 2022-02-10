@@ -2,10 +2,13 @@ package com.cg.service;
 
 import com.cg.model.Customer;
 import com.cg.model.Deposit;
+import com.cg.model.Transfer;
 import com.cg.model.Withdraw;
 import com.cg.repository.CustomerRepository;
 import com.cg.repository.DepositRepository;
+import com.cg.repository.TransferRepository;
 import com.cg.repository.WithdrawRepository;
+import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +30,9 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Autowired
     private WithdrawRepository withdrawRepository;
+
+    @Autowired
+    private TransferRepository transferRepository;
 
     @Override
     public List<Customer> findAll() {
@@ -54,7 +60,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public void increment( Long customerId, Deposit deposit) {
+    public void incrementBalance(Long customerId, Deposit deposit) {
         customerRepository.incrementBalance(deposit.getTransactionAmount(), customerId);
 
         depositRepository.save(deposit);
@@ -66,5 +72,18 @@ public class CustomerServiceImpl implements CustomerService {
         customerRepository.reduceBalance(withdraw.getTransactionAmount(), customerId);
 
         withdrawRepository.save(withdraw);
+    }
+
+    @Override
+    public void transferBalance(Long senderId, Long recipientId, Transfer transfer) {
+        customerRepository.incrementBalance(transfer.getTransactionAmount(), recipientId);
+
+        customerRepository.reduceBalance(transfer.getTransferAmount(), senderId);
+
+    }
+
+    @Override
+    public List<Customer> findAllByIdNot(Long id) {
+        return customerRepository.findAllByIdNot(id);
     }
 }
