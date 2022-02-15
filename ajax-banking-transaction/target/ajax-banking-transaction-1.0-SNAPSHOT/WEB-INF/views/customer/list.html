@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>List of customers</title>
+    <th:block th:replace="layout/head :: head"/>
+</head>
+<body>
+
+<div class="container">
+    <div class="table-title">
+        <div class="row">
+            <div class="col-sm-5">
+                <h1>List of customers</h1>
+            </div>
+            <div class="col-sm-7">
+                <button type="button" class="btn btn-outline-light create">
+                    <i class="fas fa-plus-square"></i>
+                    <span>Add New Customer</span>
+                </button>
+                <a href="/transfers" class="btn btn-outline-light">
+                    <i class="fas fa-history"></i>
+                    <span>Transfer money Information</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <table class="table table-hover" id="tblCustomer">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">FullName</th>
+            <th scope="col">Email</th>
+            <th scope="col" class="text-center">Phone</th>
+            <th scope="col">Address</th>
+            <th scope="col">Balance</th>
+            <th scope="col" class="text-center" colspan="5">Action</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        <th:block th:each="customer : ${customers}">
+
+            <tr>
+                <td th:text="${customer.id}"></td>
+                <td th:text="${customer.fullName}"></td>
+                <td th:text="${customer.email}"></td>
+                <td th:text="${customer.phone}" class="text-center"></td>
+                <td th:text="${customer.address}"></td>
+                <td th:text="${customer.balance}" class="text-end"></td>
+                <td>
+                    <button type="button" class="btn btn-outline-secondary edit" th:data-id="${customer.id}">
+                        <i class="fa fa-edit"></i>
+                    </button>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-outline-success edit" th:data-id="${customer.id}">
+                        <i class="fa fa-plus"></i>
+                    </button>
+                </td>
+                <td class="text-center">
+                    <a class="btn btn-outline-success" th:href="@{/customers/deposit/__${customer.id}__}">
+                        <i class="fa fa-plus"></i>
+                    </a>
+                </td>
+                <td class="text-center">
+                    <a class="btn btn-outline-warning" th:href="@{/customers/withdraw/__${customer.id}__}">
+                        <i class="fa fa-minus"></i>
+                    </a>
+                </td>
+                <td class="text-center">
+                    <a class="btn btn-outline-primary" th:href="@{/customers/transfer/__${customer.id}__}">
+                        <i class="fas fa-exchange-alt"></i>
+                    </a>
+                </td>
+                <td class="text-center">
+                    <a class="btn btn-outline-danger" th:href="@{/customers/delete/__${customer.id}__}">
+                        <i class="fa fa-ban"></i>
+                    </a>
+                </td>
+            </tr>
+        </th:block>
+        </tbody>
+    </table>
+</div>
+
+<div class="modal" id="modalCreate" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Modal Create Customer</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="frmCreate">
+                    <div class="row">
+                        <div class="mb-3 col-md-6 ">
+                            <input type="hidden">
+                            <label for="fullName" class="form-label fw-bold">Full name</label>
+                            <input type="text" class="form-control" id="fullName">
+                        </div>
+                        <div class="mb-3 col-md-6">
+                            <label for="email" class="form-label fw-bold">Email</label>
+                            <input type="email" class="form-control" id="email">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="mb-3 col-md-6 ">
+                            <label for="phone" class="form-label fw-bold">Phone</label>
+                            <input type="tel" class="form-control" id="phone">
+                        </div>
+                        <div class="mb-3 col-md-6">
+                            <label for="address" class="form-label fw-bold">Address</label>
+                            <input type="text" class="form-control" id="address">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-outline-primary" id="btnCreate">Create Customer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<div class="modal" id="modalUpdate" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Modal Update Customer</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="row">
+                        <div class="mb-3 col-md-6 ">
+                            <input type="hidden" id="idUp">
+                            <label for="fullNameUp" class="form-label fw-bold">Full name</label>
+                            <input type="text" class="form-control" id="fullNameUp">
+                        </div>
+                        <div class="mb-3 col-md-6">
+                            <label for="emailUp" class="form-label fw-bold">Email</label>
+                            <input type="email" class="form-control" id="emailUp">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="mb-3 col-md-6 ">
+                            <label for="phoneUp" class="form-label fw-bold">Phone</label>
+                            <input type="tel" class="form-control" id="phoneUp">
+                        </div>
+                        <div class="mb-3 col-md-6">
+                            <label for="addressUp" class="form-label fw-bold">Address</label>
+                            <input type="text" class="form-control" id="addressUp">
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-outline-primary" id="btnUpdate">Update Customer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<th:block th:replace="layout/script :: script"/>
+
+<script>
+    $("button.create").on("click", function () {
+        $("#modalCreate").modal("show");
+    });
+
+    function handlerShowUpdateModal() {
+        $("button.edit").on("click", function () {
+
+            let id = $(this).data("id");
+
+            $.ajax({
+                type: "GET",
+                url: "/api/customers/" + id
+            })
+                .done(function (data) {
+                    $("#fullNameUp").val(data.fullName);
+                    $("#emailUp").val(data.email);
+                    $("#phoneUp").val(data.phone);
+                    $("#addressUp").val(data.address);
+
+                    $("#modalUpdate").modal('show');
+                    // console.log(data)
+                })
+
+            .fail(function (resp){
+                alert("Show update modal error")
+            })
+        });
+    }
+    handlerShowUpdateModal();
+
+    /////////////////////////////////////
+
+
+    $("#btnCreate").on("click", function () {
+
+        let customer = {
+            fullName: $("#fullName").val(),
+            email: $("#email").val(),
+            phone: $("#phone").val(),
+            address: $("#address").val()
+        }
+
+        $.ajax({
+            headers: {
+                "Accept": "application/json",
+                "Content-type": "application/json"
+            },
+            type: "POST",
+            url: "/api/customers/create",
+            data: JSON.stringify(customer)
+        })
+            .done(function (data) {
+                let str = `
+                    <tr>
+                        <td>${data.id}</td>
+                        <td>${data.fullName}</td>
+                        <td>${data.email}</td>
+                        <td class="text-center">${data.phone}</td>
+                        <td>${data.address}</td>
+                        <td class="text-end">${data.balance}</td>
+                        <td>
+                            <button type="button" class="btn btn-outline-secondary edit" data-id="${data.id}">
+                                <i class="fa fa-edit"></i>
+                            </button>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-outline-success edit" data-id="5">
+                                <i class="fa fa-plus"></i>
+                            </button>
+                        </td>
+                        <td class="text-center">
+                            <a class="btn btn-outline-success" href="/customers/deposit/5">
+                                <i class="fa fa-plus"></i>
+                            </a>
+                        </td>
+                        <td class="text-center">
+                            <a class="btn btn-outline-warning" href="/customers/withdraw/5">
+                                <i class="fa fa-minus"></i>
+                            </a>
+                        </td>
+                        <td class="text-center">
+                            <a class="btn btn-outline-primary" href="/customers/transfer/5">
+                                <i class="fas fa-exchange-alt"></i>
+                            </a>
+                        </td>
+                        <td class="text-center">
+                            <a class="btn btn-outline-danger" href="/customers/delete/5">
+                                <i class="fa fa-ban"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    `;
+                $("#tblCustomer tbody").prepend(str);
+                $("#modalCreate").modal("hide");
+
+                $("#frmCreate")[0].reset();
+                handlerShowUpdateModal();
+
+                // console.log(data)
+            })
+
+
+            .fail(function (resp) {
+                console.log(resp)
+
+                alert("Create Error");
+            })
+    });
+</script>
+</body>
+</html>
